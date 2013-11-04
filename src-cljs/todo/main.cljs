@@ -24,12 +24,17 @@
 (defn log [stuff]
   (.log js/console stuff))
 
-(defn event [ev sel cb]
-  (.addEventListener (.querySelector js/document sel) ev cb))
+(defn event [ev elem cb]
+  (.addEventListener elem ev cb))
 
 (defn addList [title id]
-  (.write js/document (str "<li id=" id "> " title "<ul></ul></li>"))
-  (event "click" (str "#" id) getTasks))
+  (let [li (.createElement js/document "li")
+        ul (.createElement js/document "ul")]
+        (set! (.-innerHTML li) title)
+        (set! (.-id li) id)
+        (.appendChild li ul)
+        (.appendChild js/document.body li)
+        (event "click" li getTasks)))
 
 (defn iterateLists [resp]
    (doseq [task (get resp "items")]

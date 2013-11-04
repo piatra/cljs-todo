@@ -7,8 +7,7 @@
                  [org.clojure/clojurescript "0.0-1978"]
                  [cljs-ajax "0.2.1"]]
 
-  :plugins [[lein-cljsbuild "0.3.4"]
-            [cljs-ajax "0.2.1"]]
+  :plugins [[lein-cljsbuild "0.3.4"]]
 
   :cljsbuild {
     :builds {
