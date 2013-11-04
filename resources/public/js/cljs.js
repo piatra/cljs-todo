@@ -29029,49 +29029,49 @@ todo.main.addList = function addList(title, id) {
   return todo.main.event.call(null, "click", li, todo.main.getTasks)
 };
 todo.main.iterateLists = function iterateLists(resp) {
-  var seq__4978 = cljs.core.seq.call(null, cljs.core.get.call(null, resp, "items"));
-  var chunk__4979 = null;
-  var count__4980 = 0;
-  var i__4981 = 0;
+  var seq__5114 = cljs.core.seq.call(null, cljs.core.get.call(null, resp, "items"));
+  var chunk__5115 = null;
+  var count__5116 = 0;
+  var i__5117 = 0;
   while(true) {
-    if(i__4981 < count__4980) {
-      var task = cljs.core._nth.call(null, chunk__4979, i__4981);
+    if(i__5117 < count__5116) {
+      var task = cljs.core._nth.call(null, chunk__5115, i__5117);
       todo.main.addList.call(null, cljs.core.get.call(null, task, "title"), cljs.core.get.call(null, task, "id"));
-      var G__4982 = seq__4978;
-      var G__4983 = chunk__4979;
-      var G__4984 = count__4980;
-      var G__4985 = i__4981 + 1;
-      seq__4978 = G__4982;
-      chunk__4979 = G__4983;
-      count__4980 = G__4984;
-      i__4981 = G__4985;
+      var G__5118 = seq__5114;
+      var G__5119 = chunk__5115;
+      var G__5120 = count__5116;
+      var G__5121 = i__5117 + 1;
+      seq__5114 = G__5118;
+      chunk__5115 = G__5119;
+      count__5116 = G__5120;
+      i__5117 = G__5121;
       continue
     }else {
-      var temp__4092__auto__ = cljs.core.seq.call(null, seq__4978);
+      var temp__4092__auto__ = cljs.core.seq.call(null, seq__5114);
       if(temp__4092__auto__) {
-        var seq__4978__$1 = temp__4092__auto__;
-        if(cljs.core.chunked_seq_QMARK_.call(null, seq__4978__$1)) {
-          var c__3668__auto__ = cljs.core.chunk_first.call(null, seq__4978__$1);
-          var G__4986 = cljs.core.chunk_rest.call(null, seq__4978__$1);
-          var G__4987 = c__3668__auto__;
-          var G__4988 = cljs.core.count.call(null, c__3668__auto__);
-          var G__4989 = 0;
-          seq__4978 = G__4986;
-          chunk__4979 = G__4987;
-          count__4980 = G__4988;
-          i__4981 = G__4989;
+        var seq__5114__$1 = temp__4092__auto__;
+        if(cljs.core.chunked_seq_QMARK_.call(null, seq__5114__$1)) {
+          var c__3668__auto__ = cljs.core.chunk_first.call(null, seq__5114__$1);
+          var G__5122 = cljs.core.chunk_rest.call(null, seq__5114__$1);
+          var G__5123 = c__3668__auto__;
+          var G__5124 = cljs.core.count.call(null, c__3668__auto__);
+          var G__5125 = 0;
+          seq__5114 = G__5122;
+          chunk__5115 = G__5123;
+          count__5116 = G__5124;
+          i__5117 = G__5125;
           continue
         }else {
-          var task = cljs.core.first.call(null, seq__4978__$1);
+          var task = cljs.core.first.call(null, seq__5114__$1);
           todo.main.addList.call(null, cljs.core.get.call(null, task, "title"), cljs.core.get.call(null, task, "id"));
-          var G__4990 = cljs.core.next.call(null, seq__4978__$1);
-          var G__4991 = null;
-          var G__4992 = 0;
-          var G__4993 = 0;
-          seq__4978 = G__4990;
-          chunk__4979 = G__4991;
-          count__4980 = G__4992;
-          i__4981 = G__4993;
+          var G__5126 = cljs.core.next.call(null, seq__5114__$1);
+          var G__5127 = null;
+          var G__5128 = 0;
+          var G__5129 = 0;
+          seq__5114 = G__5126;
+          chunk__5115 = G__5127;
+          count__5116 = G__5128;
+          i__5117 = G__5129;
           continue
         }
       }else {
@@ -29081,55 +29081,76 @@ todo.main.iterateLists = function iterateLists(resp) {
     break
   }
 };
-todo.main.appendElement = function appendElement(text) {
+todo.main.addCheckbox = function addCheckbox(elem, status) {
+  var check = document.createElement("input");
+  if(!cljs.core._EQ_.call(null, status, "needsAction")) {
+    check.checked = true
+  }else {
+  }
+  check.type = "checkbox";
+  todo.main.log.call(null, check);
+  return elem.appendChild(check)
+};
+todo.main.appendElement = function appendElement(text, status) {
   var li = document.createElement("li");
   li.innerHTML = text;
+  todo.main.addCheckbox.call(null, li, status);
   return document.querySelector([cljs.core.str("#"), cljs.core.str(todo.main._STAR_parent_STAR_), cljs.core.str(" ul")].join("")).appendChild(li)
 };
 todo.main.iterateTasks = function iterateTasks(resp) {
-  var seq__4998 = cljs.core.seq.call(null, cljs.core.get.call(null, resp, "items"));
-  var chunk__4999 = null;
-  var count__5000 = 0;
-  var i__5001 = 0;
+  var seq__5134 = cljs.core.seq.call(null, cljs.core.get.call(null, resp, "items"));
+  var chunk__5135 = null;
+  var count__5136 = 0;
+  var i__5137 = 0;
   while(true) {
-    if(i__5001 < count__5000) {
-      var task = cljs.core._nth.call(null, chunk__4999, i__5001);
-      todo.main.appendElement.call(null, cljs.core.get.call(null, task, "title"));
-      var G__5002 = seq__4998;
-      var G__5003 = chunk__4999;
-      var G__5004 = count__5000;
-      var G__5005 = i__5001 + 1;
-      seq__4998 = G__5002;
-      chunk__4999 = G__5003;
-      count__5000 = G__5004;
-      i__5001 = G__5005;
+    if(i__5137 < count__5136) {
+      var task = cljs.core._nth.call(null, chunk__5135, i__5137);
+      var title_5138 = cljs.core.get.call(null, task, "title");
+      var status_5139 = cljs.core.get.call(null, task, "status");
+      if(cljs.core.count.call(null, title_5138) > 1) {
+        todo.main.appendElement.call(null, title_5138, status_5139)
+      }else {
+      }
+      var G__5140 = seq__5134;
+      var G__5141 = chunk__5135;
+      var G__5142 = count__5136;
+      var G__5143 = i__5137 + 1;
+      seq__5134 = G__5140;
+      chunk__5135 = G__5141;
+      count__5136 = G__5142;
+      i__5137 = G__5143;
       continue
     }else {
-      var temp__4092__auto__ = cljs.core.seq.call(null, seq__4998);
+      var temp__4092__auto__ = cljs.core.seq.call(null, seq__5134);
       if(temp__4092__auto__) {
-        var seq__4998__$1 = temp__4092__auto__;
-        if(cljs.core.chunked_seq_QMARK_.call(null, seq__4998__$1)) {
-          var c__3668__auto__ = cljs.core.chunk_first.call(null, seq__4998__$1);
-          var G__5006 = cljs.core.chunk_rest.call(null, seq__4998__$1);
-          var G__5007 = c__3668__auto__;
-          var G__5008 = cljs.core.count.call(null, c__3668__auto__);
-          var G__5009 = 0;
-          seq__4998 = G__5006;
-          chunk__4999 = G__5007;
-          count__5000 = G__5008;
-          i__5001 = G__5009;
+        var seq__5134__$1 = temp__4092__auto__;
+        if(cljs.core.chunked_seq_QMARK_.call(null, seq__5134__$1)) {
+          var c__3668__auto__ = cljs.core.chunk_first.call(null, seq__5134__$1);
+          var G__5144 = cljs.core.chunk_rest.call(null, seq__5134__$1);
+          var G__5145 = c__3668__auto__;
+          var G__5146 = cljs.core.count.call(null, c__3668__auto__);
+          var G__5147 = 0;
+          seq__5134 = G__5144;
+          chunk__5135 = G__5145;
+          count__5136 = G__5146;
+          i__5137 = G__5147;
           continue
         }else {
-          var task = cljs.core.first.call(null, seq__4998__$1);
-          todo.main.appendElement.call(null, cljs.core.get.call(null, task, "title"));
-          var G__5010 = cljs.core.next.call(null, seq__4998__$1);
-          var G__5011 = null;
-          var G__5012 = 0;
-          var G__5013 = 0;
-          seq__4998 = G__5010;
-          chunk__4999 = G__5011;
-          count__5000 = G__5012;
-          i__5001 = G__5013;
+          var task = cljs.core.first.call(null, seq__5134__$1);
+          var title_5148 = cljs.core.get.call(null, task, "title");
+          var status_5149 = cljs.core.get.call(null, task, "status");
+          if(cljs.core.count.call(null, title_5148) > 1) {
+            todo.main.appendElement.call(null, title_5148, status_5149)
+          }else {
+          }
+          var G__5150 = cljs.core.next.call(null, seq__5134__$1);
+          var G__5151 = null;
+          var G__5152 = 0;
+          var G__5153 = 0;
+          seq__5134 = G__5150;
+          chunk__5135 = G__5151;
+          count__5136 = G__5152;
+          i__5137 = G__5153;
           continue
         }
       }else {
@@ -29144,7 +29165,7 @@ todo.main.getList = function getList() {
 };
 todo.main.getTasks = function getTasks(e) {
   var id = e.target.getAttribute("id");
-  if(!cljs.core._EQ_.call(null, todo.main._STAR_parent_STAR_, id)) {
+  if(!(cljs.core._EQ_.call(null, todo.main._STAR_parent_STAR_, id) || cljs.core._EQ_.call(null, null, id))) {
     todo.main._STAR_parent_STAR_ = id;
     return ajax.core.GET.call(null, [cljs.core.str("https://www.googleapis.com/tasks/v1/lists/"), cljs.core.str(id), cljs.core.str("/tasks")].join(""), cljs.core.PersistentArrayMap.fromArray([new cljs.core.Keyword(null, "format", "format", 4040092521), new cljs.core.Keyword(null, "json", "json", 1017176154), new cljs.core.Keyword(null, "headers", "headers", 1809212152), cljs.core.PersistentArrayMap.fromArray(["Authorization", todo.main.headers.call(null)], true), new cljs.core.Keyword(null, "handler", 
     "handler", 1706707644), todo.main.iterateTasks], true))
