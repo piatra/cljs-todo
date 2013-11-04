@@ -1,4 +1,4 @@
-### Todo app in CLJS based of Google Tasks
+### Todo app in CLJS based on Google Tasks
 
 Practice app to learn CLJS*
 
