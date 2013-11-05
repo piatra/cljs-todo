@@ -1,5 +1,8 @@
 (ns todo.main
- (:require [ajax.core :refer [GET POST ajax-request]]))
+ (:require [ajax.core :refer [GET POST ajax-request]]
+           [dommy.core :as dom])
+ (:use-macros [dommy.macros :only [node sel1 sel]]))
+
 
 (def gapiImm (js-obj "client_id" "724598683708.apps.googleusercontent.com"
                         "scope" "https://www.googleapis.com/auth/tasks"
@@ -26,18 +29,11 @@
 (defn log [stuff]
   (.log js/console stuff))
 
-(defn event [ev elem cb]
-  (.addEventListener elem ev cb))
-
 (defn addList [title id]
   "Adds a new task list to the DOM"
-  (let [li (.createElement js/document "li")
-        ul (.createElement js/document "ul")]
-        (set! (.-innerHTML li) title)
-        (set! (.-id li) id)
-        (.appendChild li ul)
-        (.appendChild js/document.body li)
-        (event "click" li getTasks)))
+  (let [tl (node [:li {:id id} title [:ul]])]
+    (dom/append! (sel1 :body) tl)
+    (dom/listen! tl :click getTasks)))
 
 (defn iterateLists [resp]
    (doseq [task (get resp "items")]
