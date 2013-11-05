@@ -58,7 +58,7 @@
    (doseq [task (get resp "items")]
      (let [title (get task "title")
            status (get task "status")]
-       (if (> (count title) 1) ;; Google gives me empty tasks
+       (when (> (count title) 1) ;; Google gives me empty tasks
          (appendElement title status)))))
 
 (defn getList []
