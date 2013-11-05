@@ -47,7 +47,7 @@
     (log check)
     (.appendChild elem check)))
 
-(defn appendElement [text status] ;; Unfortunate naming convetion FIXME
+(defn append-task [text status]
   "Adds a new task under a task list"
     (let [li (node [:li text])]
       (addCheckbox li status)
@@ -58,7 +58,7 @@
      (let [title (get task "title")
            status (get task "status")]
        (when (> (count title) 1) ;; Google gives me empty tasks
-         (appendElement title status)))))
+         (append-task title status)))))
 
 (defn getList []
   (GET "https://www.googleapis.com/tasks/v1/users/@me/lists"
