@@ -49,10 +49,9 @@
 
 (defn appendElement [text status] ;; Unfortunate naming convetion FIXME
   "Adds a new task under a task list"
-    (let [li (.createElement js/document "li")]
-      (set! (.-innerHTML li) text)
+    (let [li (node [:li text])]
       (addCheckbox li status)
-      (.appendChild (.querySelector js/document (str "#" *parent* " ul")) li)))
+      (dom/append! (sel1 [(str "#" *parent*) :ul]) li)))
 
 (defn iterateTasks [resp]
    (doseq [task (get resp "items")]
