@@ -63,8 +63,7 @@
 (defn getList []
   (GET "https://www.googleapis.com/tasks/v1/users/@me/lists"
        {:format :json :headers {"Authorization" (make-auth-token)}
-        :handler iterateLists}
-       ))
+        :handler iterateLists}))
 
 (defn getTasks [e]
   (let [id (.getAttribute (.-target e) "id")]
@@ -73,8 +72,7 @@
         (set! *parent* id)
         (GET (str "https://www.googleapis.com/tasks/v1/lists/" id "/tasks")
            {:format :json :headers {"Authorization" (make-auth-token)}
-            :handler iterateTasks}
-           )))))
+            :handler iterateTasks})))))
 
 (defn authorize []
   (.authorize js/gapi.auth gapiImm authCb))
