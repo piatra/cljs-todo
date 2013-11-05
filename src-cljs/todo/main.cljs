@@ -22,8 +22,8 @@
       (.setItem js/localStorage "gapi_token" (.-access_token token))
       (getList))))
 
-(defn headers []
-  "Generate authentication header"
+(defn make-auth-token []
+  "Generate authentication token for header"
   (clojure.string/join " " ["Bearer" (.getItem js/localStorage "gapi_token")]))
 
 (defn log [stuff]
@@ -63,7 +63,7 @@
 
 (defn getList []
   (GET "https://www.googleapis.com/tasks/v1/users/@me/lists"
-       {:format :json :headers {"Authorization" (headers)}
+       {:format :json :headers {"Authorization" (make-auth-token)}
         :handler iterateLists}
        ))
 
@@ -73,7 +73,7 @@
       (do
         (set! *parent* id)
         (GET (str "https://www.googleapis.com/tasks/v1/lists/" id "/tasks")
-           {:format :json :headers {"Authorization" (headers)}
+           {:format :json :headers {"Authorization" (make-auth-token)}
             :handler iterateTasks}
            )))))
 
