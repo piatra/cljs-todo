@@ -10,7 +10,7 @@
 
 (def gapiNotImm (js-obj "client_id" "724598683708.apps.googleusercontent.com"
                         "scope" "https://www.googleapis.com/auth/tasks"
-                        "immediate" true))
+                        "immediate" false))
 
 (def *parent*) ;; FIXME
 
