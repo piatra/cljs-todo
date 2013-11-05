@@ -45,7 +45,7 @@
       (set! (.-checked check) true))
     (set! (.-type check) "checkbox")
     (log check)
-    (.appendChild elem check)))
+    (dom/append! elem check)))
 
 (defn append-task [text status]
   "Adds a new task under a task list"
