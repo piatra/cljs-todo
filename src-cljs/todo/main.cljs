@@ -1,5 +1,5 @@
 (ns todo.main
- (:require [ajax.core :refer [GET POST ajax-request]]
+ (:require [ajax.core :refer [GET POST ajax-request transform-opts]]
            [dommy.core :as dom])
  (:use-macros [dommy.macros :only [node sel1 sel by-id]]))
 
@@ -11,6 +11,14 @@
 (def gapiNotImm (js-obj "client_id" "724598683708.apps.googleusercontent.com"
                         "scope" "https://www.googleapis.com/auth/tasks"
                         "immediate" false))
+
+
+(defn log [& stuff]
+  (.log js/console (clojure.string/join " " stuff)))
+
+(defn PUT [uri & [opts]]
+   (ajax-request uri "PUT" (transform-opts opts)))
+
 
 (def *parent*) ;; FIXME
 
@@ -27,9 +35,6 @@
   "Generate authentication token for header"
   (clojure.string/join " " ["Bearer" (.getItem js/localStorage "gapi_token")]))
 
-(defn log [stuff]
-  (.log js/console stuff))
-
 (defn display-list [title id]
   "Adds a new task list to the DOM"
   (when (seq title)
@@ -41,21 +46,36 @@
    (doseq [task (get resp "items")]
      (display-list (get task "title") (get task "id"))))
 
+(defn set-status-ack []
+  (log "set status"))
+
+(defn set-status [task-id new-status target]
+  (PUT (str "https://www.googleapis.com/tasks/v1/lists/" *parent* "/tasks/" task-id)
+       {:format :json :headers {"Authorization" (make-auth-token)}
+        :params {:id task-id
+                 :parent *parent*
+                 :status new-status}
+        :handler set-status-ack}))
+
 (defn add-checkbox [elem status]
-  (let [check (node [:input {:type "checkbox"}])]
-    (if-not (= status "needsAction")
+  (let [check (node [:input {:type "checkbox"}])
+        done (= status "completed")
+        toggled-status (if done "needsAction" "completed")]
+    (if done
       (dom/set-attr! check :checked true))
+    (dom/listen! check :change (partial set-status (dom/attr elem :id) toggled-status))
     (dom/append! elem check)))
 
-(defn display-task [text status]
+(defn display-task [text id status]
   "Adds a new task under a task list"
-    (let [li (node [:li text])]
+    (let [li (node [:li {:id id} text])]
       (add-checkbox li status)
       (dom/append! (sel1 [(str "#" *parent*) :ul]) li)))
 
 (defn process-tasks [resp]
    (doseq [task (get resp "items")]
      (let [title (get task "title")
+           id (get task "id")
            status (get task "status")]
        (when (> (seq title)) ;; Google gives me empty tasks
          (display-task title id status)))))
