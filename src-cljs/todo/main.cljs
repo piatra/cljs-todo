@@ -57,8 +57,8 @@
    (doseq [task (get resp "items")]
      (let [title (get task "title")
            status (get task "status")]
-       (when (> (count title) 1) ;; Google gives me empty tasks
-         (display-task title status)))))
+       (when (> (seq title)) ;; Google gives me empty tasks
+         (display-task title id status)))))
 
 (defn get-lists []
   (GET "https://www.googleapis.com/tasks/v1/users/@me/lists"
