@@ -1,7 +1,7 @@
 (ns todo.main
  (:require [ajax.core :refer [GET POST ajax-request]]
            [dommy.core :as dom])
- (:use-macros [dommy.macros :only [node sel1 sel]]))
+ (:use-macros [dommy.macros :only [node sel1 sel by-id]]))
 
 
 (def gapiImm (js-obj "client_id" "724598683708.apps.googleusercontent.com"
