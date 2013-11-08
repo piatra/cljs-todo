@@ -41,7 +41,7 @@
      (add-list (get task "title") (get task "id"))))
 
 (defn add-checkbox [elem status]
-  (let [check (node [:input {:type :checkbox}])]
+  (let [check (node [:input {:type "checkbox"}])]
     (if-not (= status "needsAction")
       (dom/set-attr! check :checked true))
     (dom/append! elem check)))
