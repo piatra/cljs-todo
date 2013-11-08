@@ -65,7 +65,7 @@
         :handler iterate-lists}))
 
 (defn get-tasks [e]
-  (let [id (.getAttribute (.-target e) "id")]
+  (let [id (dom/attr (aget e "target") "id")]
     (if-not (or (= *parent* id) (= nil id))
       (do
         (set! *parent* id)
