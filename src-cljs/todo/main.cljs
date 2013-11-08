@@ -74,5 +74,5 @@
            {:format :json :headers {"Authorization" (make-auth-token)}
             :handler process-tasks})))))
 
-(defn authorize []
+(defn ^:export authorize []
   (.authorize js/gapi.auth gapiImm authCb))
