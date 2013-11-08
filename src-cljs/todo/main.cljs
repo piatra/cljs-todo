@@ -14,13 +14,14 @@
 
 (def *parent*) ;; FIXME
 
+;; starting point
 (defn authCb [token]
   "Manage the authetication token"
   (if (= token nil)
     (.authorize js/gapi.auth gapiNotImm authCb)
     (do
       (.setItem js/localStorage "gapi_token" (.-access_token token))
-      (get-list))))
+      (get-lists))))
 
 (defn make-auth-token []
   "Generate authentication token for header"
@@ -29,16 +30,16 @@
 (defn log [stuff]
   (.log js/console stuff))
 
-(defn add-list [title id]
+(defn display-list [title id]
   "Adds a new task list to the DOM"
   (when (seq title)
     (let [tl (node [:li {:id id} title [:ul]])]
       (dom/append! (sel1 :body) tl)
       (dom/listen! tl :click get-tasks))))
 
-(defn iterate-lists [resp]
+(defn process-lists [resp]
    (doseq [task (get resp "items")]
-     (add-list (get task "title") (get task "id"))))
+     (display-list (get task "title") (get task "id"))))
 
 (defn add-checkbox [elem status]
   (let [check (node [:input {:type "checkbox"}])]
@@ -46,23 +47,23 @@
       (dom/set-attr! check :checked true))
     (dom/append! elem check)))
 
-(defn append-task [text status]
+(defn display-task [text status]
   "Adds a new task under a task list"
     (let [li (node [:li text])]
       (add-checkbox li status)
       (dom/append! (sel1 [(str "#" *parent*) :ul]) li)))
 
-(defn iterate-tasks [resp]
+(defn process-tasks [resp]
    (doseq [task (get resp "items")]
      (let [title (get task "title")
            status (get task "status")]
        (when (> (count title) 1) ;; Google gives me empty tasks
-         (append-task title status)))))
+         (display-task title status)))))
 
-(defn get-list []
+(defn get-lists []
   (GET "https://www.googleapis.com/tasks/v1/users/@me/lists"
        {:format :json :headers {"Authorization" (make-auth-token)}
-        :handler iterate-lists}))
+        :handler process-lists}))
 
 (defn get-tasks [e]
   (let [id (dom/attr (aget e "target") "id")]
@@ -71,7 +72,7 @@
         (set! *parent* id)
         (GET (str "https://www.googleapis.com/tasks/v1/lists/" id "/tasks")
            {:format :json :headers {"Authorization" (make-auth-token)}
-            :handler iterate-tasks})))))
+            :handler process-tasks})))))
 
 (defn authorize []
   (.authorize js/gapi.auth gapiImm authCb))
