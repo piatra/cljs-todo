@@ -35,11 +35,22 @@
   "Generate authentication token for header"
   (clojure.string/join " " ["Bearer" (.getItem js/localStorage "gapi_token")]))
 
+(defn submit-task [e]
+  (if (or (= (aget e "which") 13) (= (aget e "keyCode") 13))
+    (let [el-input (aget e "target")
+          task-message (aget el-input "value")]
+      (create-task task-message))))
+
 (defn display-list [title id]
   "Adds a new task list to the DOM"
   (when (seq title)
-    (let [tl (node [:li {:id id} title [:ul]])]
+    (let [tl (node [:li {:id id} title [:ul]])
+          el-input (node [:input {:type "text"
+                                :placeholder "Something to do"
+                                :class "add-task"}])]
       (dom/append! (sel1 :body) tl)
+      (dom/append! tl el-input)
+      (dom/listen! el-input :keydown submit-task)
       (dom/listen! tl :click get-tasks))))
 
 (defn process-lists [resp]
@@ -80,16 +91,30 @@
        (when (> (seq title)) ;; Google gives me empty tasks
          (display-task title id status)))))
 
+(defn append-task [task-message]
+  (log task-message))
+
+;; /lists/tasklist/tasks
+(defn create-task [task-message]
+  (POST (str "https://www.googleapis.com/tasks/v1/lists/" *parent* "/tasks")
+       {:format :json :headers {"Authorization" (make-auth-token)}
+        :params {:tasklist *parent*
+                 :title task-message}
+        :handler (append-task task-message)}))
+
 (defn get-lists []
   (GET "https://www.googleapis.com/tasks/v1/users/@me/lists"
        {:format :json :headers {"Authorization" (make-auth-token)}
         :handler process-lists}))
 
 (defn get-tasks [e]
-  (let [id (dom/attr (aget e "target") "id")]
+  (let [id (dom/attr (aget e "target") "id")
+        el-active (sel1 ".active")]
     (if-not (or (= *parent* id) (= nil id))
       (do
         (set! *parent* id)
+        (when el-active (dom/remove-class! el-active "active"))
+        (dom/add-class! (sel1 (str "#" id)) :active)
         (GET (str "https://www.googleapis.com/tasks/v1/lists/" id "/tasks")
            {:format :json :headers {"Authorization" (make-auth-token)}
             :handler process-tasks})))))

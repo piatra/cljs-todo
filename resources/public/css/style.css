@@ -14,3 +14,11 @@ body > li {
   width: 40%;
   margin: 0 auto;
 }
+
+.add-task {
+  display: none;
+}
+
+.active .add-task {
+  display: block;
+}
