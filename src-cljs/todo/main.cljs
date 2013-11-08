@@ -31,9 +31,10 @@
 
 (defn addList [title id]
   "Adds a new task list to the DOM"
-  (let [tl (node [:li {:id id} title [:ul]])]
-    (dom/append! (sel1 :body) tl)
-    (dom/listen! tl :click getTasks)))
+  (when (seq title)
+    (let [tl (node [:li {:id id} title [:ul]])]
+      (dom/append! (sel1 :body) tl)
+      (dom/listen! tl :click getTasks))))
 
 (defn iterateLists [resp]
    (doseq [task (get resp "items")]
