@@ -45,7 +45,6 @@
     (if-not (= status "needsAction")
       (set! (.-checked check) true))
     (set! (.-type check) "checkbox")
-    (log check)
     (dom/append! elem check)))
 
 (defn append-task [text status]
