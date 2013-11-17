@@ -2,10 +2,24 @@
 
 <head>
   <title>Tasks</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/foundation.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 
     <body>
+    <div class="container large-10 columns large-centered">
+      <div class="large-3 columns" id="tasklists">
+      </div>
+      <div class="large-6 columns" id="tasks">
+      </div>
+      <div class="large-3 columns" id="sidebar">
+        <ul>
+          <li>Hide completed <input id="opt-hide-completed" type="checkbox" checked="true"></li>
+        </ul>
+      </div>
+
+    </div>
 
     <script>
         function GoogleLoaded () {

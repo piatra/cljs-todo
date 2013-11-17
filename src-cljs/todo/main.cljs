@@ -20,7 +20,17 @@
    (ajax-request uri "PUT" (transform-opts opts)))
 
 
-(def *parent*) ;; FIXME
+(def *parent* nil) ;; FIXME
+(def *options* {
+                :hide-completed true})
+
+(defn toggle-hide-completed []
+  (set! *options* (assoc *options* :hide-completed (not (*options* :hide-completed))))
+  (if (*options* :hide-completed)
+    (dorun (map #(dom/add-class! % "hidden") (sel ".completed")))
+    (dorun (map #(dom/remove-class! % "hidden") (sel ".completed")))))
+
+(dom/listen! (sel1 :#opt-hide-completed) :change toggle-hide-completed)
 
 ;; starting point
 (defn authCb [token]
@@ -48,7 +58,7 @@
           el-input (node [:input {:type "text"
                                 :placeholder "Something to do"
                                 :class "add-task"}])]
-      (dom/append! (sel1 :body) tl)
+      (dom/append! (sel1 :#tasklists) tl)
       (dom/append! tl el-input)
       (dom/listen! el-input :keydown submit-task)
       (dom/listen! tl :click get-tasks))))
@@ -81,9 +91,15 @@
   "Adds a new task under a task list"
     (let [li (node [:li {:id id} text])]
       (add-checkbox li status)
-      (dom/append! (sel1 [(str "#" *parent*) :ul]) li)))
+      (when (= status "completed")
+        (dom/add-class! li "completed")
+        (when (*options* :hide-completed)
+          (dom/add-class! li "hidden")))
+      (dom/append! (sel1 :#tasks) li)))
 
 (defn process-tasks [resp]
+   ;; clear old ones first
+   (dom/set-html! (sel1 :#tasks) "")
    (doseq [task (get resp "items")]
      (let [title (get task "title")
            id (get task "id")
@@ -121,3 +137,5 @@
 
 (defn ^:export authorize []
   (.authorize js/gapi.auth gapiImm authCb))
+
+

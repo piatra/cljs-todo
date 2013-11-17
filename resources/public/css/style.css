@@ -6,19 +6,23 @@ body {
   color: #333;
 }
 
-body > li {
+li {
   list-style: none;
   background: #fff;
   box-shadow: 0 0 2px #aaa;
   padding: .5rem;
-  width: 40%;
   margin: 0 auto;
 }
 
 .add-task {
-  display: none;
+  display: none !important;
 }
 
 .active .add-task {
   display: block;
 }
+
+.hidden {
+  display: none;
+}
+
