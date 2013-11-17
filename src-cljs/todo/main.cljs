@@ -79,18 +79,23 @@
         :handler set-status-ack}))
 
 (defn add-checkbox [elem status]
-  (let [check (node [:input {:type "checkbox"}])
+  (let [check (node [:input {:type "checkbox",
+                             :class "input-check"}])
         done (= status "completed")
-        toggled-status (if done "needsAction" "completed")]
+        toggled-status (if done "needsAction" "completed")
+        label (node [:label {}])]
     (if done
       (dom/set-attr! check :checked true))
-    (dom/listen! check :change (partial set-status (dom/attr elem :id) toggled-status))
-    (dom/append! elem check)))
+    (dom/append! label check)
+    (dom/listen! label :change (partial set-status (dom/attr elem :id) toggled-status))
+    (dom/append! elem label)))
 
 (defn display-task [text id status]
   "Adds a new task under a task list"
-    (let [li (node [:li {:id id} text])]
+    (let [li (node [:li {:id id}])
+          span (node [:span text])]
       (add-checkbox li status)
+      (dom/append! li span)
       (when (= status "completed")
         (dom/add-class! li "completed")
         (when (*options* :hide-completed)
