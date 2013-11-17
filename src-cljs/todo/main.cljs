@@ -83,10 +83,12 @@
                              :class "input-check"}])
         done (= status "completed")
         toggled-status (if done "needsAction" "completed")
-        label (node [:label {}])]
+        label (node [:label {:class "topcoat-checkbox"}])
+        checkmark (node [:div {:class "topcoat-checkbox__checkmark"}])]
     (if done
       (dom/set-attr! check :checked true))
     (dom/append! label check)
+    (dom/append! label checkmark)
     (dom/listen! label :change (partial set-status (dom/attr elem :id) toggled-status))
     (dom/append! elem label)))
 
